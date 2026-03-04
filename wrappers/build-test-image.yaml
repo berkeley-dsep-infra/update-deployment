@@ -1,13 +1,19 @@
-name: Call Shared Binder Workflow
+
+name: Call Shared Build and Test Container Image Workflow
 
 on:
-  pull_request_target:
-    types: [opened]
+  pull_request:
+    paths-ignore:
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+      - 'LICENSE'
+      - '.github/**'
+      - 'images/**'
 
 jobs:
-  call-shared-binder:
-    uses: berkeley-dsep-infra/update-deployment/.github/workflows/shared-binder.yaml@main
+  call-shared-build-test-image:
+    uses: berkeley-dsep-infra/update-deployment/.github/workflows/shared-build-test-image.yaml@DH-650
     with:
-      pr_head_ref: ${{ github.event.pull_request.head.ref }}
-      pr_head_userrepo: ${{ github.event.pull_request.head.repo.full_name }}
-      pr_number: ${{ github.event.pull_request.number }}
+      image: ${{ vars.IMAGE}}
+    secrets:
+      GAR_SECRET_KEY: ${{ secrets.GAR_SECRET_KEY }}
