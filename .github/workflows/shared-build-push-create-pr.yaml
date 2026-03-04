@@ -1,4 +1,5 @@
-name: Build and Push Container Image, and Push Update to the Datahub Repo 
+name: Build and Push Container Image, and Push Update to the Datahub Repo
+
 on:
   workflow_call:
     inputs:
