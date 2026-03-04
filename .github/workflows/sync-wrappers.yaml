@@ -20,6 +20,14 @@ jobs:
           private-key: ${{ secrets.PRIVATE_KEY_SECRET }}
           owner: ${{ github.repository_owner }}
 
+      - name: Install gh CLI
+        run: sudo apt-get install gh -y
+
+      - name: Authenticate gh CLI
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: echo "$GH_TOKEN" | gh auth login --with-token
+
       - name: Set git identity
         run: |
           git config --global user.email "${{ vars.IMAGE_BUILDER_BOT_EMAIL }}"
@@ -39,6 +47,7 @@ jobs:
             cp -r wrappers/* $repo/.github/workflows/
 
             cd $repo
+            git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/${{ github.repository_owner }}/$repo.git
 
             BRANCH="update-ci-wrapper"
 
@@ -69,11 +78,12 @@ jobs:
                 --body "Updated files: $CHANGED_FILES"
             else
               echo "Creating new PR"
-              gh pr create \
+              PR_NUMBER=$(gh pr create \
                 --title "$COMMIT_MESSAGE" \
-                --body "Updated files: $CHANGED_FILES" \
+                --body "Updated workflow files" \
                 --head "$BRANCH" \
-                --base main
+                --base main \
+                --json number --jq '.number')
             fi
 
 
