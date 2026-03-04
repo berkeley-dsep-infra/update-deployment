@@ -71,12 +71,13 @@ jobs:
                 --body "Updated files: $CHANGED_FILES"
             else
               echo "Creating new PR"
-              PR_NUMBER=$(gh pr create \
+              PR_URL=$(gh pr create \
                 --title "$COMMIT_MESSAGE" \
                 --body "Updated workflow files" \
                 --head "$BRANCH" \
-                --base main \
-                --json number --jq '.number')
+                --base main)
+              PR_NUMBER="${PR_URL##*/}"
+              echo "Created PR #$PR_NUMBER"
             fi
 
 
