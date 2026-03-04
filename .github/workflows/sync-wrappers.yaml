@@ -20,13 +20,6 @@ jobs:
           private-key: ${{ secrets.PRIVATE_KEY_SECRET }}
           owner: ${{ github.repository_owner }}
 
-      - name: Install gh CLI
-        run: sudo apt-get install gh -y
-
-      - name: Authenticate gh CLI
-        env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: echo "$GH_TOKEN" | gh auth login --with-token
 
       - name: Set git identity
         run: |
@@ -47,7 +40,7 @@ jobs:
             cp -r wrappers/* $repo/.github/workflows/
 
             cd $repo
-            git remote set-url origin https://x-access-token:$GH_TOKEN@github.com/${{ github.repository_owner }}/$repo.git
+            git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository_owner }}/$repo.git
 
             BRANCH="update-ci-wrapper"
 
