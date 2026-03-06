@@ -1,1 +1,8 @@
 a11y-user-image-03-26
+astro-user-image-03-26
+data100-user-image-03-26
+data101-user-image-03-26
+data102-user-image-03-26
+data8-user-image-03-26
+eecs-user-image-03-26
+stat159-user-image-03-26
