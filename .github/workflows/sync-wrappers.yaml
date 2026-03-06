@@ -83,7 +83,10 @@ jobs:
 
             if [ "$MERGE_PR" = "true" ]; then
               echo "Merging PR #$PR_NUMBER"
-              gh pr merge "$PR_NUMBER" --merge --auto 
+              if ! gh pr merge "$PR_NUMBER" --merge --auto; then
+                echo "PR already mergeable, merging immediately"
+                gh pr merge "$PR_NUMBER" --merge
+              fi
             fi
 
             cd ..
