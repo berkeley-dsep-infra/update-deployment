@@ -82,27 +82,8 @@ jobs:
 
 
             if [ "$MERGE_PR" = "true" ]; then
-              echo "Waiting for checks to pass for PR #$PR_NUMBER"
-
-              # Poll checks until all complete and successful
-              while true; do
-                ALL_CHECKS_PASSED=$(gh pr checks "$PR_NUMBER" --json conclusion --jq 'map(.conclusion) | all(. == "success")')
-                PENDING_CHECKS=$(gh pr checks "$PR_NUMBER" --json status --jq 'map(.status) | any(. != "completed")')
-                
-                if [ "$PENDING_CHECKS" = "true" ]; then
-                  echo "Checks still running, sleeping 30s..."
-                  sleep 30
-                elif [ "$ALL_CHECKS_PASSED" = "true" ]; then
-                  echo "All checks passed, merging PR #$PR_NUMBER"
-                  gh pr merge "$PR_NUMBER" --merge --admin
-                  echo "Deleting branch $BRANCH in $repo"
-                  gh api -X DELETE repos/${{ github.repository_owner }}/$repo/git/refs/heads/$BRANCH
-                  break
-                else
-                  echo "Some checks failed on PR #$PR_NUMBER, skipping merge."
-                  break
-                fi
-              done
+              echo "Merging PR #$PR_NUMBER"
+              gh pr merge "$PR_NUMBER" --merge --auto --admin
             fi
 
             cd ..
