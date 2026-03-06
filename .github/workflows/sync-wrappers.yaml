@@ -44,8 +44,10 @@ jobs:
 
             BRANCH="update-ci-wrapper"
 
-            CHANGED_FILES=$(git status --porcelain -uno | awk '{print $2}')
-            if [ -z "$CHANGED_FILES" ]; then
+            git add .github/workflows
+      
+            # Check if there are staged changes
+            if git diff --cached --quiet; then
               echo "No changes detected for $repo. Skipping PR creation."
               cd ..
               continue
@@ -55,9 +57,6 @@ jobs:
             EXISTING_PR=$(gh pr list --head "$BRANCH" --json number --jq '.[0].number // empty')
 
             git checkout -B "$BRANCH"
-            for file in $CHANGED_FILES; do
-              git add "$file"
-            done
 
             COMMIT_MESSAGE="Sync CI wrapper updates to $repo"
             git commit -m "$COMMIT_MESSAGE" || echo "No commit created"
@@ -68,7 +67,7 @@ jobs:
               echo "Updating existing PR #$EXISTING_PR"
               gh pr edit "$EXISTING_PR" \
                 --title "$COMMIT_MESSAGE" \
-                --body "Updated files: $CHANGED_FILES"
+                --body "Updated workflow files"
             else
               echo "Creating new PR"
               PR_URL=$(gh pr create \
