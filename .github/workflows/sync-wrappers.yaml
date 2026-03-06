@@ -83,7 +83,7 @@ jobs:
 
             if [ "$MERGE_PR" = "true" ]; then
               echo "Merging PR #$PR_NUMBER"
-              gh pr merge "$PR_NUMBER" --merge --auto --admin
+              gh pr merge "$PR_NUMBER" --merge --auto 
             fi
 
             cd ..
