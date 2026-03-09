@@ -5,7 +5,7 @@ on:
     inputs:
       image:
           type: string
-          required: true
+          required: false
 
 jobs:
   test-build:
