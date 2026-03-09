@@ -6,9 +6,6 @@ on:
       image:
           type: string
           required: true
-    secrets:
-      GAR_SECRET_KEY:
-        required: true
 
 jobs:
   test-build:
